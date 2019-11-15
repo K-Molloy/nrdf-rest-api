@@ -36,9 +36,9 @@ const contactController = require('./controllers/contact');
 /**
  * NRDF Controllers
  */
-const tocController = require('./controllers/toc')
+//const tocController = require('./controllers/toc')
 const tController = require('./controllers/test')
-const trainController = require('./controllers/train')
+    //const trainController = require('./controllers/train')
     //const junctionController = require('./controllers/junction')
     //const stationController = require('./controllers/station')
 
@@ -157,17 +157,19 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /**
  * My Routes
  */
-app.route('/tocs')
+/*
+ app.route('/tocs')
     .get(tocController.getTocs)
     .post(tocController.createTocs)
     .put(tocController.updateTocs)
     .delete(tocController.deleteTocs)
 
-/* app.route('/trains')
+ app.route('/trains')
     .get(trainController.getTrains)
     .post(trainController.createTrains)
     .put(trainController.updateTrains)
-    .delete(trainController.deleteTrains) */
+    .delete(trainController.deleteTrains) 
+*/
 
 app.get('/t/test', tController.oxfordRoad)
     /**
