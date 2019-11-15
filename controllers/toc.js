@@ -2,7 +2,7 @@
  * GET /tocs
  * List all TOCS
  */
-const Toc = require('./models/toc')
+const Toc = require('../models/toc')
 
 exports.getTocs = (req, res) => {
     Toc.find((err, docs) => {

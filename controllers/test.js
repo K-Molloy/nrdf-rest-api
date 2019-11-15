@@ -1,7 +1,7 @@
 /**
  * Train Test
  */
-const trains = require('./models/train.js')
+const trains = require('../models/train.js')
 
 exports.oxfordRoad = (req, res, next) => {
     var collection = db.collection('TRAINS')
