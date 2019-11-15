@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 
 const tocSchema = new mongoose.Schema({
-    name: string,
-    business_code: string,
-    sector_code: string,
-    atoc_code: string,
+    name: String,
+    business_code: String,
+    sector_code: String,
+    atoc_code: String,
     whitelist: boolean,
 })
 
