@@ -8,5 +8,5 @@ const tocSchema = new mongoose.Schema({
     whitelist: Boolean,
 })
 
-const Toc = mongoose.model('Toc', tocSchema)
-module.exports = Toc;
+const TOCS = mongoose.model('TOCS', tocSchema)
+module.exports = TOCS;

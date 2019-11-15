@@ -97,6 +97,22 @@ describe('GET /api/upload', () => {
   });
 });
 
+/**
+ * NRDF URL
+ */
+
+describe('GET /reference/tocs', () => {
+  it('should return 200 OK', (done) => {
+    request(app)
+      .get('/reference/tocs')
+      .expect(200, done);
+  });
+});
+
+/**
+ * Random URL
+ */
+
 describe('GET /random-url', () => {
   it('should return 404', (done) => {
     request(app)

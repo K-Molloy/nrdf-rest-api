@@ -1,0 +1,37 @@
+extends ../layout
+
+block content
+  .pb-2.mt-2.mb-4.border-bottom
+    h3 Create New Train Operating Company (TOC)
+  form(id='create-toc-form', method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold.text-right(for='name') Name
+      .col-md-7
+        input.form-control(type='name', name='name', id='name', placeholder='name', autofocus, autocomplete='name', required)
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold.text-right(for='business-code') Business Code
+      .col-md-7
+        input.form-control(type='business-code', name='business-code', id='business-code', placeholder='business-code', required)
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold.text-right(for='sector-code') Sector Code
+      .col-md-7
+        input.form-control(type='sector-code', name='sector-code', id='sector-code', placeholder='sector-code', required)
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold.text-right(for='atoc-code') ATOC Code
+      .col-md-7
+        input.form-control(type='atoc-code', name='atoc-code', id='atoc-code', placeholder='atoc-code', required)
+    .form-group.row
+      label.col-md-3.col-form-label.font-weight-bold.text-right Whitelist
+      .col-sm-6
+        .form-check.form-check-inline
+          input(type='radio', class='form-check-input', name='whitelist', value='yes', data-toggle='radio')
+          label.form-check-label Yes
+
+        .form-check.form-check-inline
+          input(type='radio', class='form-check-input', name='whitelist', value='no', data-toggle='radio')
+          label.form-check-label No
+    .form-group.offset-sm-3.col-md-7.pl-2
+      button.btn.btn-success(type='submit')
+        i.fas.fa-user-plus.fa-sm
+        | Create TOC

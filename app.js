@@ -72,7 +72,7 @@ mongoose.connection.on('error', (err) => {
  */
 app.set('host', process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0');
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname,'views/'));
 app.set('view engine', 'pug');
 app.use(expressStatusMonitor());
 app.use(compression());
@@ -96,14 +96,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-app.use((req, res, next) => {
+/* app.use((req, res, next) => {
     if (req.path === '/api/upload') {
         // Multer multipart/form-data handling needs to occur before the Lusca CSRF check.
         next();
     } else {
         lusca.csrf()(req, res, next);
     }
-});
+}); */
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 app.disable('x-powered-by');
@@ -158,23 +158,34 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
  * My Routes
  */
 
-app.route('/tocs')
+app.route('/reference/tocs')
     .get(tocController.getTocs)
     .post(tocController.createTocs)
     .put(tocController.updateTocs)
     .delete(tocController.deleteTocs)
 
-app.route('/trains')
+app.route('/reference/tocs/:tocID')
+    .get(tocController.getTocByID)
+    .put(tocController.updateTocByID)
+    .delete(tocController.deleteTocByID)
+
+app.route('/reference/trains')
     .get(trainController.getTrains)
     .post(trainController.createTrains)
     .put(trainController.updateTrains)
     .delete(trainController.deleteTrains)
 
+app.route('/reference/trains/:trainID')
+    .get(trainController.getTrainByID)
+    .put(trainController.updateTrainByID)
+    .delete(trainController.deleteTrainByID)
 
+// currently broken
 app.get('/t/test', tController.oxfordRoad)
-    /**
-     * API examples routes.
-     */
+
+/**
+ * API examples routes.
+ */
 app.get('/api', apiController.getApi);
 app.get('/api/lastfm', apiController.getLastfm);
 app.get('/api/nyt', apiController.getNewYorkTimes);
