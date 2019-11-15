@@ -9,21 +9,21 @@ const trainSchema = new mongoose.Schema({
         gbtt_timestamp: String,
         original_loc_stanox: String,
         planned_timestamp: String,
-        timetable_variation: number,
+        timetable_variation: Number,
         original_loc_timestamp: String,
         current_train_id: String,
-        delay_monitoring_point: boolean,
+        delay_monitoring_point: Boolean,
         next_report_run_time: String,
         reporting_stanox: String,
         actual_timestamp: String,
-        correction_ind: boolean,
+        correction_ind: Boolean,
         event_source: String,
         train_file_address: String,
         platform: number,
         division_code: String,
-        train_terminated: boolean,
+        train_terminated: Boolean,
         train_id: String,
-        offroute_ind: boolean,
+        offroute_ind: Boolean,
         variation_status: String,
         train_service_code: String,
         toc_id: String,
@@ -36,7 +36,7 @@ const trainSchema = new mongoose.Schema({
         line_ind: String
     },
     lastUpdate: String,
-    movementActive: boolean,
+    movementActive: Boolean,
     movementActivation: {
         schedule_source: String,
         train_file_address: String,
@@ -92,9 +92,9 @@ const trainSchema = new mongoose.Schema({
         schedule_start_date: String,
         train_status: String,
     },
-    scheduleActive: boolean,
-    trustActivated: boolean,
-    coo: object
+    scheduleActive: Boolean,
+    trustActivated: Boolean,
+    coo: {}
 })
 
 const Train = mongoose.model('Train', trainSchema)

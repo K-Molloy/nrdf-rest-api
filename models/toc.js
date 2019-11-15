@@ -5,7 +5,7 @@ const tocSchema = new mongoose.Schema({
     business_code: String,
     sector_code: String,
     atoc_code: String,
-    whitelist: boolean,
+    whitelist: Boolean,
 })
 
 const Toc = mongoose.model('Toc', tocSchema)
