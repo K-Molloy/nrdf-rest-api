@@ -9,6 +9,9 @@
 
 @import "themes/default/default";
 
+@import 'postcss-nested';
+@import 'postcss-cssnext';
+
 // Scaffolding
 // -------------------------
 
@@ -155,5 +158,27 @@ textarea {
 
   &:hover, &:active {
     background-color: #f1ef00;
+  }
+}
+
+#table-wrapper {
+  display: flex;
+  
+}
+#tocs {
+  width: 15em;
+  border-collapse: collapse;
+  
+  & th {
+    background-color: whitesmoke;
+    padding: 1em;
+    text-align: left;
+    border: 1px solid black;
+    padding: 1em;
+  }
+  
+  & td {
+    border: 1px solid black;
+    padding: 1em;
   }
 }

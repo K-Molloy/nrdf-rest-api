@@ -1,9 +1,21 @@
 extends ../layout
 
 block content
-   .page-header
-       h3 All Tocs
-
-    ul
-        for toc in docs
-            li = toc.name
+ .page-header
+   h3 All Tocs
+ #table-wrapper
+  table#tocs
+   tr
+    th Name
+    th Business Code
+    th Sector Code
+    th ATOC Code
+    th Whitelisted
+   tbody
+    for toc in tocs
+     tr
+      td= toc.name
+      td= toc.business_code
+      td= toc.sector_code
+      td= toc.atoc_code
+      td= toc.whitelist

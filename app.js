@@ -181,8 +181,10 @@ app.route('/reference/trains/:trainID')
     .delete(trainController.deleteTrainByID)
 
 // currently broken
-app.get('/t/test', tController.oxfordRoad)
-
+app.get('/t/td', tController.rawAllTDHeadcode)
+app.get('/t/tdmovement',tController.rawAllTDMovementHeadcode)
+app.get('/t/status',tController.rawState)
+app.post('/t/test',tController.createTrain)
 /**
  * API examples routes.
  */

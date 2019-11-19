@@ -14,11 +14,8 @@ const TOCS = require('../models/toc')
  */
 exports.getTocs = (req,res) => {
     TOCS.find((err, docs) => {
-        res.render('reference/getTocs', {
-            title: 'Tocs',
-            docs,
-        });
-    })
+        res.render('reference/getTocs', {tocs: docs });
+    });
 }
 /**
  * POST /tocs
@@ -53,8 +50,11 @@ exports.deleteTocs = (req,res,next)=> {
  * GET /tocs/tocID
  * Lists toc's with ID=tocID
  */
-exports.getTocByID = (req,res,next) => {
-
+exports.getTocByID = (req,res) => {
+    TOCS.findById(req.params.id, function (err, docs) {
+        if (err) return next(err);
+        res.render('reference/getTocs',docs);
+    })
 }
 /**
  * PUT /tocs/tocID

@@ -1,0 +1,18 @@
+extends ../../layout
+
+block content
+ .page-header
+   h3= title
+ #table-wrapper
+  table#tocs
+   tr
+    th ObjectID
+    th Headcode
+    th State
+   tbody
+    for train in trains
+      tr
+       td= train._id
+       td= train.descr
+       td= train.lastMovement.variation_status
+   

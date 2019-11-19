@@ -97,5 +97,5 @@ const trainSchema = new mongoose.Schema({
     coo: {}
 })
 
-const Train = mongoose.model('Train', trainSchema)
-module.exports = Train;
+const TRAINS = mongoose.model('Trains', trainSchema)
+module.exports = TRAINS;
