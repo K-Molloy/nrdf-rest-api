@@ -1,0 +1,25 @@
+extends ../../layout
+
+block content
+ .page-header
+   h3= title
+    h4= query
+ #table-wrapper
+ table#tocs
+  tr
+   th ObjectID
+   th Train UID
+   th ATOC
+   th Days Run
+   th Timetable Start
+   th Timetable End
+  tbody
+   for train in trains
+     tr
+      td= train._id
+      td= train.CIF_train_uid
+      td= train.atoc_code
+      td= train.schedule_days_runs
+      td= train.schedule_start_date
+      td= train.schedule_end_date
+   

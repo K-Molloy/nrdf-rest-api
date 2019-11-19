@@ -36,20 +36,15 @@ exports.rawAllTDMovementHeadcode = (req, res) => {
         //res.render('nrdf/raw/test',{title: 'TD & Movement & Schedule Activated',trains:docs})
     })
 }
-
+/**
+ * ALL Trains - LATE/ ON TIME / EARLY
+ * TD Active
+ * Movement Active
+ * Schedule Active
+ */
 exports.rawState = (req,res)=>{
     nTRAINS.find({'movementActive':true, 'tdActive': true,'scheduleActive':true},'descr lastMovement.variation_status',function(err, docs) {
         res.render('nrdf/raw/status',{title: 'Status',trains:docs})
         //res.render('nrdf/raw/test',{title: 'Status Raw',trains:docs})
-    })
-}
-
-exports.createTrain = (req,res)=>{
-    let cTrain = new nTRAINS(req.body)
-    cTrain.save((err,TRAIN)=>{
-        if (err) {
-            res.send(err)
-        }
-        res.json(TRAIN)
     })
 }

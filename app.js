@@ -39,6 +39,7 @@ const contactController = require('./controllers/contact');
 const tocController = require('./controllers/toc')
 const tController = require('./controllers/test')
 const trainController = require('./controllers/train')
+const scheduleController = require('./controllers/schedule')
     //const junctionController = require('./controllers/junction')
     //const stationController = require('./controllers/station')
 
@@ -158,33 +159,22 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
  * My Routes
  */
 
-app.route('/reference/tocs')
-    .get(tocController.getTocs)
-    .post(tocController.createTocs)
-    .put(tocController.updateTocs)
-    .delete(tocController.deleteTocs)
+app.get('/reference/tocs',tocController.getTocs)
 
-app.route('/reference/tocs/:tocID')
-    .get(tocController.getTocByID)
-    .put(tocController.updateTocByID)
-    .delete(tocController.deleteTocByID)
+app.get('/reference/tocs/:tocID',tocController.getTocByID)
 
-app.route('/reference/trains')
-    .get(trainController.getTrains)
-    .post(trainController.createTrains)
-    .put(trainController.updateTrains)
-    .delete(trainController.deleteTrains)
+app.get('/reference/trains',trainController.getTrains)
 
-app.route('/reference/trains/:trainID')
-    .get(trainController.getTrainByID)
-    .put(trainController.updateTrainByID)
-    .delete(trainController.deleteTrainByID)
+app.get('/reference/trains/:trainID',trainController.getTrainByID)
 
-// currently broken
+// Test Routes
 app.get('/t/td', tController.rawAllTDHeadcode)
 app.get('/t/tdmovement',tController.rawAllTDMovementHeadcode)
 app.get('/t/status',tController.rawState)
-app.post('/t/test',tController.createTrain)
+app.get('/t/schedule/raw',scheduleController.rawAllTrains)
+app.get('/t/schedule/json',scheduleController.jsonAllTrains)
+app.get('/t/schedule/train/:headcode',scheduleController.rawTrainsHeadcode)
+app.get('/t/schedule/northern',scheduleController.rawFridayNorthernSchedule)
 /**
  * API examples routes.
  */
@@ -195,8 +185,6 @@ app.get('/api/steam', passportConfig.isAuthenticated, passportConfig.isAuthorize
 app.get('/api/stripe', apiController.getStripe);
 app.post('/api/stripe', apiController.postStripe);
 app.get('/api/scraping', apiController.getScraping);
-app.get('/api/twilio', apiController.getTwilio);
-app.post('/api/twilio', apiController.postTwilio);
 app.get('/api/clockwork', apiController.getClockwork);
 app.post('/api/clockwork', apiController.postClockwork);
 app.get('/api/foursquare', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFoursquare);
