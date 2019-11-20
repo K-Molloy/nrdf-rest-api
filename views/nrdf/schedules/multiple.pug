@@ -3,12 +3,13 @@ extends ../../layout
 block content
  .page-header
    h3= title
-    h4= query
+    h4= message
  #table-wrapper
  table#tocs
   tr
    th ObjectID
    th Train UID
+   th Headcode
    th ATOC
    th Days Run
    th Timetable Start
@@ -16,8 +17,12 @@ block content
   tbody
    for train in trains
      tr
-      td= train._id
-      td= train.CIF_train_uid
+      td
+       a(href='/t/schedule/trains/'+train._id)= train._id
+      td 
+       a(href='/t/schedule/trains/'+train.CIF_train_uid)= train.CIF_train_uid
+      td
+       a(href='/t/schedule/trains/'+train.schedule_segment.signalling_id)= train.schedule_segment.signalling_id
       td= train.atoc_code
       td= train.schedule_days_runs
       td= train.schedule_start_date

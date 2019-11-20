@@ -19,6 +19,7 @@ const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const multer = require('multer');
 
+
 const upload = multer({ dest: path.join(__dirname, 'uploads') });
 
 /**
@@ -30,7 +31,7 @@ dotenv.config({ path: '.env.example' });
  * Controllers (route handlers).
  */
 const homeController = require('./controllers/home');
-const userController = require('./controllers/user');
+const userController = require('./user');
 const apiController = require('./controllers/api');
 const contactController = require('./controllers/contact');
 /**
@@ -61,6 +62,7 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useUnifiedTopology', true);
+mongoose.set('debug',true)
 mongoose.connect(process.env.MONGODB_URI);
 mongoose.connection.on('error', (err) => {
     console.error(err);
@@ -155,26 +157,32 @@ app.post('/account/profile', passportConfig.isAuthenticated, userController.post
 app.post('/account/password', passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userController.getOauthUnlink);
+
 /**
- * My Routes
+ *  Test Routes
  */
-
-app.get('/reference/tocs',tocController.getTocs)
-
-app.get('/reference/tocs/:tocID',tocController.getTocByID)
-
-app.get('/reference/trains',trainController.getTrains)
-
-app.get('/reference/trains/:trainID',trainController.getTrainByID)
-
-// Test Routes
 app.get('/t/td', tController.rawAllTDHeadcode)
 app.get('/t/tdmovement',tController.rawAllTDMovementHeadcode)
 app.get('/t/status',tController.rawState)
-app.get('/t/schedule/raw',scheduleController.rawAllTrains)
-app.get('/t/schedule/json',scheduleController.jsonAllTrains)
-app.get('/t/schedule/train/:headcode',scheduleController.rawTrainsHeadcode)
+app.get('/t/schedule/r',scheduleController.rawRandomTrain)
+app.get('/t/t/statusq',tController.rawStateQ)
+/**
+ * My Routes
+ */
+app.get('/reference/tocs',tocController.getTocs)
+app.get('/reference/tocs/:tocID',tocController.getTocByID)
+app.get('/reference/trains',trainController.getTrains)
+app.get('/reference/trains/:trainID',trainController.getTrainByID)
+
+
+
+/**
+ * Pre-Production Routes
+ */
+app.get('/t/schedule/trains',scheduleController.rawAllTrainsToday)
+app.get('/t/schedule/trains/:trainID',scheduleController.getTrainByID)
 app.get('/t/schedule/northern',scheduleController.rawFridayNorthernSchedule)
+app.get('/t/schedule/:tocID',scheduleController.rawTrainsTOC)
 /**
  * API examples routes.
  */

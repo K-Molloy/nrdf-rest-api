@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 const tocSchema = new mongoose.Schema({
-    name: String,
+    name: ObjectId,
     business_code: String,
     sector_code: String,
     atoc_code: String,

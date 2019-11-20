@@ -48,3 +48,22 @@ exports.rawState = (req,res)=>{
         //res.render('nrdf/raw/test',{title: 'Status Raw',trains:docs})
     })
 }
+/**
+ * Testing Different Query Style
+ */
+exports.rawStateQ = (req,res)=>{
+    var query = getStatus(req)
+    var promise = query.exec();
+    promise.then(docs =>{
+        //res.json(docs)
+        res.render('nrdf/raw/status',{title: 'WOW Status',trains:docs})
+    });
+}
+
+function getStatus(req){
+    var query = nTRAINS.find({'movementActive':true, 'tdActive': true,'scheduleActive':true},'descr lastMovement.variation_status');
+    return query
+}
+/**
+ * TODO: Next Route in Testing
+ */

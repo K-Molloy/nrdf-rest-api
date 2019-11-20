@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 const trainSchema = new mongoose.Schema({
-    _id: String,
+    _id: ObjectId,
     trustID: String,
     descr: String,
     lastMovement: {

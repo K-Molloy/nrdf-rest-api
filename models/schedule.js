@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-mongoose.set('debug',true)
+var ObjectId = mongoose.Schema.Types.ObjectId;
 
 const scheduleSchema = new mongoose.Schema({
-    _id: String,
+    _id: ObjectId,
     CIF_bank_holiday_running: String,
     CIF_stp_indicator: String,
     CIF_train_uid: String,

@@ -1,0 +1,47 @@
+extends ../../layout
+
+block content
+ .page-header
+   h3= title
+    h4= train.CIF_train_uid
+   p= train
+ #table-wrapper
+ table#tocs
+  tr
+   th ObjectID
+   th Train UID
+   th Headcode
+   th ATOC
+   th Days Run
+   th Timetable Start
+   th Timetable End
+  tbody
+     tr
+      td
+       a(href='/t/schedule/trains/'+train._id)= train._id
+      td 
+       a(href='/t/schedule/trains/'+train.CIF_train_uid)= train.CIF_train_uid
+      td
+       a(href='/t/schedule/trains/'+train.schedule_segment.signalling_id)= train.schedule_segment.signalling_id
+      td= train.atoc_code
+      td= train.schedule_days_runs
+      td= train.schedule_start_date
+      td= train.schedule_end_date
+   
+ #table-wrapper
+  table#tocs
+   tr
+    th Name
+    th Type
+    th Arrival
+    th Departure
+    th Passing
+   tbody
+     for stop in train.schedule_segment.schedule_location
+      tr
+       td= stop.tiploc_code
+       td= stop.location_type
+       td= stop.arrival
+       td= stop.departure
+       td= stop.pass
+   
