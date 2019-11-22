@@ -1,0 +1,21 @@
+extends ../../layout
+
+block content
+    .page-header
+        h3= title
+    #table-wrapper
+        table#tocs
+            tr
+                th Name
+            tbody
+                for object in TOCs
+                    tr
+                        td= object
+                            #table-wrapper
+        table#tocs
+            tr
+                th Name
+            tbody
+                for object in stations
+                    tr
+                        td= object

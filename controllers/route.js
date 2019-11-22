@@ -1,5 +1,5 @@
 /**
- * Schedule Controller Functions
+ * Route Controller Functions
  * 
  * All functions give very basic responses
  * 
@@ -9,11 +9,16 @@ const rToc = require('../models/toc')
 const rTiploc = require('../models/tiploc')
 const rRoute = require('../models/route')
 const math = require('mathjs')
+
+exports.getRouteSchedule=(req,res)=>{
+    res.render('nrdf/schedules/route',{title:'' ,message:'' ,trains: docs, first: '',last:''})
+}
+
 /**
- * GET /t/schedules
- * Login page.
+ * GET /t/routes
+ * Enter Route creation  page.
  */
-exports.getScheduleForm = (req, res) => {
+exports.getCreateRouteForm = (req, res) => {
     rToc.find({}).lean().select('-_id name').exec((err, tocDocs) => {
         rTiploc.find({}).lean().select('-_id tiploc_code').exec((err, tiplocDocs) => {
             var tocRes = createStringArray(tocDocs, 'name');
@@ -28,10 +33,10 @@ exports.getScheduleForm = (req, res) => {
  * 
  */
 /**
- * POST /t/schedules
- * Create query using form
+ * POST /t/routes
+ * Create route using form
  */
-exports.postScheduleForm = (req, res) => {
+exports.postCreateRouteForm = (req, res) => {
     //request (origin/terminus/TOC)
     rToc.findOne({ 'name': req.body.toc }, 'atoc_code', (err, tocDocs) => {
         rSchedule.
@@ -45,14 +50,28 @@ exports.postScheduleForm = (req, res) => {
     })
 };
 
-/**
- * 
- */
-function createStringArray(arr, prop) {
-    var result = [];
-    for (var i = 0; i < arr.length; i += 1) {
-        result.push(arr[i][prop]);
-    }
-    return result;
+exports.getRoute=(req,res)=>{
+    rRoute.find((err, docs) => {
+        res.render('nrdf/routes/allRoutes', { title: 'All Routes',routes: docs});
+      });
 }
 
+exports.updateAllRoute=(req,res)=>{
+
+}
+
+exports.deleteAllRoute=(req,res)=>{
+    
+}
+
+exports.getRouteById=(req,res)=>{
+
+}
+
+exports.updateRouteById=(req,res)=>{
+
+}
+
+exports.deleteRouteById=(req,res)=>{
+    
+}

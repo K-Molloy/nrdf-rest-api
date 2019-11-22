@@ -18,11 +18,11 @@ block content
   tbody
      tr
       td
-       a(href='/t/schedule/trains/'+train._id)= train._id
+       a(href='/t/trains/'+train._id)= train._id
       td 
-       a(href='/t/schedule/trains/'+train.CIF_train_uid)= train.CIF_train_uid
+       a(href='/t/trains/'+train.CIF_train_uid)= train.CIF_train_uid
       td
-       a(href='/t/schedule/trains/'+train.schedule_segment.signalling_id)= train.schedule_segment.signalling_id
+       a(href='/t/trains/'+train.schedule_segment.signalling_id)= train.schedule_segment.signalling_id
       td= train.atoc_code
       td= train.schedule_days_runs
       td= train.schedule_start_date

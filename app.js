@@ -18,35 +18,34 @@ const passport = require('passport');
 const expressStatusMonitor = require('express-status-monitor');
 const sass = require('node-sass-middleware');
 const multer = require('multer');
-
-
-const upload = multer({ dest: path.join(__dirname, 'uploads') });
+const timeout = require('express-timeout-handler')
 
 /**
  * Load environment variables from .env file, where API keys and passwords are configured.
  */
-dotenv.config({ path: '.env.example' });
+dotenv.config({ path: '.env' });
 
 /**
- * Controllers (route handlers).
+ * Base Controllers (route handlers).
  */
 const homeController = require('./controllers/home');
-const userController = require('./user');
-const apiController = require('./controllers/api');
+const userController = require('./controllers/user');
+
 const contactController = require('./controllers/contact');
 /**
- * NRDF Controllers
+ * NRDF Controllers (route handlers)
  */
-const tocController = require('./controllers/toc')
-const tController = require('./controllers/test')
-const trainController = require('./controllers/train')
-const scheduleController = require('./controllers/schedule')
-    //const junctionController = require('./controllers/junction')
-    //const stationController = require('./controllers/station')
+const tocController = require('./controllers/toc');
+const tController = require('./controllers/test');
+const trainController = require('./controllers/train');
+const scheduleController = require('./controllers/schedule');
+const routeController = require('./controllers/route');
+//const junctionController = require('./controllers/junction')
+//const stationController = require('./controllers/station')
 
 
 /**
- * API keys and Passport configuration.
+ * Passport configuration.
  */
 const passportConfig = require('./config/passport');
 
@@ -128,11 +127,28 @@ app.use((req, res, next) => {
     }
     next();
 });
+/**
+ * Express Timeout Options
+ */
+var options = {
+    timeout: 30000,
+    onTimeout: function(req, res) {
+      res.status(503).send('Service unavailable. Please retry.');
+    },
+    onDelayedResponse: function(req, method, args, requestTime) {
+      console.log(`Attempted to call ${method} after timeout`);
+    },
+  };
+app.use(timeout.handler(options));
+/**
+ * Path Alterations
+ */
 app.use('/', express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/chart.js/dist'), { maxAge: 31557600000 }));
 app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/popper.js/dist/umd'), { maxAge: 31557600000 }));
 app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js'), { maxAge: 31557600000 }));
 app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/jquery/dist'), { maxAge: 31557600000 }));
+app.use('/js/lib', express.static(path.join(__dirname, 'node_modules/lightpick'), { maxAge: 31557600000 }));
 app.use('/webfonts', express.static(path.join(__dirname, 'node_modules/@fortawesome/fontawesome-free/webfonts'), { maxAge: 31557600000 }));
 
 /**
@@ -161,118 +177,38 @@ app.get('/account/unlink/:provider', passportConfig.isAuthenticated, userControl
 /**
  *  Test Routes
  */
-app.get('/t/td', tController.rawAllTDHeadcode)
-app.get('/t/tdmovement',tController.rawAllTDMovementHeadcode)
-app.get('/t/status',tController.rawState)
-app.get('/t/schedule/r',scheduleController.rawRandomTrain)
-app.get('/t/t/statusq',tController.rawStateQ)
+app.get('/t/status',trainController.allActiveTrainstatus)
+app.get('/t/trains/r',trainController.rawRandomTrain)
 /**
  * My Routes
  */
 app.get('/reference/tocs',tocController.getTocs)
 app.get('/reference/tocs/:tocID',tocController.getTocByID)
-app.get('/reference/trains',trainController.getTrains)
-app.get('/reference/trains/:trainID',trainController.getTrainByID)
 
+app.get('/live/trains/:trainID',trainController.getLiveTrainByID)
+
+app.get('/live/schedules',scheduleController.getScheduleForm)
+app.post('/live/schedules',scheduleController.postScheduleForm)
 
 
 /**
  * Pre-Production Routes
  */
-app.get('/t/schedule/trains',scheduleController.rawAllTrainsToday)
-app.get('/t/schedule/trains/:trainID',scheduleController.getTrainByID)
-app.get('/t/schedule/northern',scheduleController.rawFridayNorthernSchedule)
-app.get('/t/schedule/:tocID',scheduleController.rawTrainsTOC)
-/**
- * API examples routes.
- */
-app.get('/api', apiController.getApi);
-app.get('/api/lastfm', apiController.getLastfm);
-app.get('/api/nyt', apiController.getNewYorkTimes);
-app.get('/api/steam', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getSteam);
-app.get('/api/stripe', apiController.getStripe);
-app.post('/api/stripe', apiController.postStripe);
-app.get('/api/scraping', apiController.getScraping);
-app.get('/api/clockwork', apiController.getClockwork);
-app.post('/api/clockwork', apiController.postClockwork);
-app.get('/api/foursquare', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFoursquare);
-app.get('/api/tumblr', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getTumblr);
-app.get('/api/facebook', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getFacebook);
-app.get('/api/github', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getGithub);
-app.get('/api/twitter', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getTwitter);
-app.post('/api/twitter', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.postTwitter);
-app.get('/api/instagram', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getInstagram);
-app.get('/api/paypal', apiController.getPayPal);
-app.get('/api/paypal/success', apiController.getPayPalSuccess);
-app.get('/api/paypal/cancel', apiController.getPayPalCancel);
-app.get('/api/lob', apiController.getLob);
-app.get('/api/upload', lusca({ csrf: true }), apiController.getFileUpload);
-app.post('/api/upload', upload.single('myFile'), lusca({ csrf: true }), apiController.postFileUpload);
-app.get('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getPinterest);
-app.post('/api/pinterest', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.postPinterest);
-app.get('/api/here-maps', apiController.getHereMaps);
-app.get('/api/google-maps', apiController.getGoogleMaps);
-app.get('/api/google/drive', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getGoogleDrive);
-app.get('/api/chart', apiController.getChart);
-app.get('/api/google/sheets', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getGoogleSheets);
-app.get('/api/quickbooks', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.getQuickbooks);
+app.get('/t/trains/:trainID',trainController.getTrainByID)
 
-/**
- * OAuth authentication routes. (Sign in)
- */
-app.get('/auth/instagram', passport.authenticate('instagram', { scope: ['basic', 'public_content'] }));
-app.get('/auth/instagram/callback', passport.authenticate('instagram', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/snapchat', passport.authenticate('snapchat'));
-app.get('/auth/snapchat/callback', passport.authenticate('snapchat', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
-app.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/github', passport.authenticate('github'));
-app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email', 'https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/spreadsheets.readonly'], accessType: 'offline', prompt: 'consent' }));
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/twitter', passport.authenticate('twitter'));
-app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect(req.session.returnTo || '/');
-});
-app.get('/auth/linkedin', passport.authenticate('linkedin', { state: 'SOME STATE' }));
-app.get('/auth/linkedin/callback', passport.authenticate('linkedin', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect(req.session.returnTo || '/');
-});
+app.route('/t/create-route')
+    .get(routeController.getCreateRouteForm)
+    .post(routeController.postCreateRouteForm)
 
-/**
- * OAuth authorization routes. (API examples)
- */
-app.get('/auth/foursquare', passport.authorize('foursquare'));
-app.get('/auth/foursquare/callback', passport.authorize('foursquare', { failureRedirect: '/api' }), (req, res) => {
-    res.redirect('/api/foursquare');
-});
-app.get('/auth/tumblr', passport.authorize('tumblr'));
-app.get('/auth/tumblr/callback', passport.authorize('tumblr', { failureRedirect: '/api' }), (req, res) => {
-    res.redirect('/api/tumblr');
-});
-app.get('/auth/steam', passport.authorize('openid', { state: 'SOME STATE' }));
-app.get('/auth/steam/callback', passport.authorize('openid', { failureRedirect: '/api' }), (req, res) => {
-    res.redirect(req.session.returnTo);
-});
-app.get('/auth/pinterest', passport.authorize('pinterest', { scope: 'read_public write_public' }));
-app.get('/auth/pinterest/callback', passport.authorize('pinterest', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect('/api/pinterest');
-});
-app.get('/auth/quickbooks', passport.authorize('quickbooks', { scope: ['com.intuit.quickbooks.accounting'], state: 'SOME STATE' }));
-app.get('/auth/quickbooks/callback', passport.authorize('quickbooks', { failureRedirect: '/login' }), (req, res) => {
-    res.redirect(req.session.returnTo);
-});
-
+app.route('/t/routes')
+    .get(routeController.getRoute)
+    .post(routeController.createRoute)
+    .put(routeController.updateAllRoute)
+    .delete(routeController.deleteAllRoute)
+app.route('/t/routes/:routeID')
+    .get(routeController.getRouteById)
+    .put(routeController.updateRouteById)
+    .delete(routeController.deleteRouteById)
 /**
  * Error Handler.
  */
@@ -293,5 +229,7 @@ app.listen(app.get('port'), () => {
     console.log('%s App is running at http://localhost:%d in %s mode', chalk.green('✓'), app.get('port'), app.get('env'));
     console.log('  Press CTRL-C to stop\n');
 });
+
+process.on('SIGINT', () => { console.log("Bye bye!"); process.exit(); })
 
 module.exports = app;

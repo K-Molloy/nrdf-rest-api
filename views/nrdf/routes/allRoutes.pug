@@ -1,0 +1,31 @@
+extends ../../layout
+
+block content
+ .page-header
+   h3= title
+    h4= message
+
+ #table-wrapper
+ table#tocs
+  tr
+   th Route ID
+   th Origin
+   th Destination
+   th Operator
+   th Stops
+   th Berths
+   th Av.Delay
+   th On Time%
+   th Cancel %
+  tbody
+   for route in routes
+     tr
+      td= route.route_id
+      td= route.origin
+      td= route.destination
+      td= route.toc
+      td= route.number_of_stops
+      td= route.number_of_berths
+      td= route.statistics.average_delay
+      td= route.statistics.ontime_chance
+      td= route.statistics.cancel_chance

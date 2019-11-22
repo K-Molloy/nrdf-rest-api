@@ -4,16 +4,15 @@ block content
  .page-header
    h3= title
     h4= message
+
  #table-wrapper
  table#tocs
   tr
    th ObjectID
    th Train UID
-   th Headcode
-   th ATOC
+   th Departure Time
+   th Arrival Time
    th Days Run
-   th Timetable Start
-   th Timetable End
   tbody
    for train in trains
      tr
@@ -21,10 +20,8 @@ block content
        a(href='/t/trains/'+train._id)= train._id
       td 
        a(href='/t/trains/'+train.CIF_train_uid)= train.CIF_train_uid
-      td
-       a(href='/t/trains/'+train.schedule_segment.signalling_id)= train.schedule_segment.signalling_id
-      td= train.atoc_code
+      td= first.time
+      td= last.time
       td= train.schedule_days_runs
-      td= train.schedule_start_date
-      td= train.schedule_end_date
+
    
