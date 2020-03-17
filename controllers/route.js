@@ -55,6 +55,9 @@ exports.getRoute=(req,res)=>{
         res.render('nrdf/routes/allRoutes', { title: 'All Routes',routes: docs});
       });
 }
+exports.createRoute=(req,res)=>{
+    
+}
 
 exports.updateAllRoute=(req,res)=>{
 

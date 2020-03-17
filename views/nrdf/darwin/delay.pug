@@ -1,0 +1,60 @@
+extends ../../layout
+
+block content
+ .page-header
+   h3= title
+    h4= train.CIF_train_uid
+   p= train
+ #table-wrapper
+ table#tocs
+  tr
+   th ObjectID
+   th Train UID
+   th Headcode
+   th ATOC
+   th Days Run
+   th Timetable Start
+   th Timetable End
+  tbody
+     tr
+      td
+       a(href='/t/trains/'+train._id)= train._id
+      td 
+       a(href='/t/trains/'+train.CIF_train_uid)= train.CIF_train_uid
+      td
+       a(href='/t/trains/'+train.schedule_segment.signalling_id)= train.schedule_segment.signalling_id
+      td= train.atoc_code
+      td= train.schedule_days_runs
+      td= train.schedule_start_date
+      td= train.schedule_end_date
+   
+ #table-wrapper
+  table#tocs
+   tr
+    th Name
+    th Type
+    th Arrival
+    th Departure
+    th Passing
+   tbody
+     for stop in train.schedule_segment.schedule_location
+      tr
+       td= stop.tiploc_code
+       td= stop.location_type
+       td= stop.arrival
+       td= stop.departure
+       td= stop.pass
+
+script. 
+    var r = new XMLHttpRequest();
+    r.open("GET", "https://huxley.apphb.com/all/gtw/from/vic/1?accessToken=DA1C7740-9DA0-11E4-80E6-A920340000B1", true);
+    r.onreadystatechange = function () {
+        if (r.readyState != 4 || r.status != 200) return;
+        var resp = JSON.parse(r.response);
+        if (resp.trainServices && resp.trainServices.length > 0) {
+            alert("The next train to arrive at " + resp.locationName + " from " + resp.filterLocationName + " will get in at " + resp.trainServices[0].sta);
+        } else {
+            alert("Sorry, no trains from " + resp.filterLocationName + " arriving soon");
+        }
+    };
+    r.send();

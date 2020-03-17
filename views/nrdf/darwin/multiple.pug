@@ -1,0 +1,63 @@
+extends ../../layout
+
+block content
+ body(onload='startTime()')
+ .page-header
+   h3= title
+   h4= stationName
+ #table-wrapper
+ table#timer
+  tr
+   th Current Time:
+   th#time
+
+ #table-wrapper
+ table#tocs
+  tr
+   th
+   th Origin
+   th Departure
+   th Arrival Time
+   th Departure Time
+   th Operator
+  tbody
+   for train in trainServices
+     tr
+      td
+       a(href='/huxley/service/'+train.serviceIdPercentEncoded) ID
+      td
+       a(href='/huxley/all/'+train.origin[0].locationName)=train.origin[0].locationName
+      td 
+       a(href='/huxley/all/'+train.destination[0].locationName)=train.destination[0].locationName
+      td
+       p#tableheader Scheduled
+       p=train.sta
+       p#tableheader Estimated
+       p=train.eta
+      td
+       p#tableheader Scheduled
+       p=train.std
+       p#tableheader Estimated
+       p=train.etd
+
+      td= train.operator
+ script. 
+  function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('time').innerHTML =
+    h + ":" + m + ":" + s;
+    var t = setTimeout(startTime, 500);
+    }
+  function checkTime(i) {
+   if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+   return i;
+  }
+  setTimeout(function() {
+   location.reload();
+  }, 30000);
+   

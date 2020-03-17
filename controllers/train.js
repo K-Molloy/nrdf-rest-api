@@ -17,7 +17,7 @@ exports.rawRandomTrain = (req, res) => {
         var random = math.floor(math.random() * count);
         rSchedule.findOne().skip(random).exec((err, docs) => {
 
-            res.render('nrdf/schedules/single', { title: 'Random Schedule', trains: docs })
+            res.render('nrdf/schedules/single', { title: 'Random Schedule', train: docs })
             //res.json(docs)
         })
     })
@@ -40,8 +40,8 @@ exports.getTrainByID = (req, res) => {
     }
     var promise = query.exec();
     promise.then(docs => {
-        console.log(docs);
-        console.log(docs.length);
+        //console.log(docs);
+        //console.log(docs.length);
         if (docs.length>1) {
             return res.render('nrdf/schedules/multiple', { title: 'Train by ID', trains: docs, message: 'Multiple Trains Found!' });
         }
@@ -114,7 +114,7 @@ exports.getLiveTrainByID = (req, res) => {
     }
     var promise = query.exec();
     promise.then(docs => {
-        console.log(docs)
+        //console.log(docs)
         if (checkMultiple(docs)) {
             return res.render('nrdf/raw/test', { title: 'Train by ID', trains: docs})
         }

@@ -40,6 +40,7 @@ const tController = require('./controllers/test');
 const trainController = require('./controllers/train');
 const scheduleController = require('./controllers/schedule');
 const routeController = require('./controllers/route');
+const darwinController = require('./controllers/darwin');
 //const junctionController = require('./controllers/junction')
 //const stationController = require('./controllers/station')
 
@@ -127,6 +128,11 @@ app.use((req, res, next) => {
     }
     next();
 });
+
+app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private')
+    next()
+  })
 /**
  * Express Timeout Options
  */
@@ -190,6 +196,10 @@ app.get('/live/trains/:trainID',trainController.getLiveTrainByID)
 app.get('/live/schedules',scheduleController.getScheduleForm)
 app.post('/live/schedules',scheduleController.postScheduleForm)
 
+app.get('/huxley/all/:crs',darwinController.getAll)
+app.get('/huxley/delay/:crs',darwinController.getDelay)
+app.get('/huxley/service/:serviceID',darwinController.getTrain)
+//app.get('/huxley/all/:crs/:no',darwinController.getAll)
 
 /**
  * Pre-Production Routes

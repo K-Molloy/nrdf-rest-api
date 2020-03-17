@@ -1,0 +1,39 @@
+extends ../../layout
+
+block content
+ .page-header
+   h3= title
+   h4= stationName
+
+ #table-wrapper
+ table#tocs
+  tr
+   th Station
+   th Calling Times
+  tbody
+   for station in previousStations
+     tr
+      td
+       a(href='/huxley/all/'+station.locationName)=station.locationName
+      td
+       p#tableheader Scheduled
+       p=station.st
+       p#tableheader Estimated
+       p=station.et
+   tr
+      td
+       a(href='/huxley/all/'+currentStation.locationName)=currentStation.locationName
+      td
+       p#tableheader Scheduled
+       p=currentStation.st
+       p#tableheader Estimated
+       p=currentStation.et
+   for station in nextStations
+     tr
+      td
+       a(href='/huxley/all/'+station.locationName)=station.locationName
+      td
+       p#tableheader Scheduled
+       p=station.st
+       p#tableheader Estimated
+       p=station.et
